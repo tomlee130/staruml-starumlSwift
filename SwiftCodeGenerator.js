@@ -139,7 +139,7 @@ define(function (require, exports, module) {
                     if (item instanceof type.UMLAttribute ||  item instanceof type.UMLAssociationEnd) { // if write member variable
                         codeWriter.writeLine(cppCodeGen.getMemberVariable(item, elem instanceof type.UMLInterface));
                     } else if (item instanceof type.UMLOperation) { // if write method
-                        codeWriter.writeLine(cppCodeGen.getMethod(item, false));
+                        //codeWriter.writeLine(cppCodeGen.getMethod(item, false));
                     } else if (item instanceof type.UMLClass) {
                         writeClassHeader(codeWriter, item, cppCodeGen);
                     } else if (item instanceof type.UMLEnumeration) {
@@ -258,20 +258,19 @@ define(function (require, exports, module) {
                 codeWriter.writeLine("public class " + elem.name + finalModifier + writeInheritance(elem, tmpIsPrivate) + " {");
             }
             
+            if (classfiedAttributes._public.length > 0) {
+                write(classfiedAttributes._public);
+            } else {
+                codeWriter.writeLine("\n");
+            }
+            if (classfiedAttributes._protected.length > 0) {
+                write(classfiedAttributes._protected);
+            }
+            
+            if (classfiedAttributes._private.length > 0) {
+                write(classfiedAttributes._private);
+            }
             if (!isPrivate) {
-                if (classfiedAttributes._public.length > 0 && !tmpIsPrivate) {
-                    write(classfiedAttributes._public);
-                } else {
-                    codeWriter.writeLine("\n");
-                }
-                if (classfiedAttributes._protected.length > 0 && !tmpIsPrivate) {
-                    write(classfiedAttributes._protected);
-                }
-            
-                if (classfiedAttributes._private.length > 0 && tmpIsPrivate) {
-                    write(classfiedAttributes._private);
-                }
-            
                 codeWriter.writeLine("}\n");
             }
         };
@@ -653,7 +652,11 @@ define(function (require, exports, module) {
                 var doc = '' + (elem.documentation ? elem.documentation : elem.name) + "\n";
                 docs = this.getIndentDocuments(doc, indentLine);
             }
-            var property = indentLine + "var ";
+            var property = indentLine;
+            if (elem.type instanceof type.UMLClass) {
+                property += this.getVisibility(elem) + " "
+            }
+            property += "var ";
             // type
             var _type = this.getType(elem);
             
@@ -678,21 +681,21 @@ define(function (require, exports, module) {
                 if (isProtocol) {
                     property += elem.name + ": Dictionary<String, Any> {get}";
                 } else {
-                    property += elem.name + ": Dictionary<String, Any>";
+                    property += elem.name + ": Dictionary<String, Any>?";
                 }
                 
             } else if (_type === "Array" || _type === "array") {
                 if (isProtocol) {
                     property += elem.name + ": Array<Any> {get}";
                 } else {
-                    property += elem.name + ": Array<Any>";
+                    property += elem.name + ": Array<Any>?";
                 }
                 
             } else {
                 if (isProtocol) {
                     property += elem.name + ": " + _type + " {get}";
                 } else {
-                    property += elem.name + ": " + _type;
+                    property += elem.name + ": " + _type + "?";
                 }
             }
             
@@ -878,11 +881,11 @@ define(function (require, exports, module) {
         case UML.VK_PUBLIC:
             return "public";
         case UML.VK_PROTECTED:
-            return "protected";
+            return "fileprivate";
         case UML.VK_PRIVATE:
             return "private";
         }
-        return null;
+        return "";
     };
 
     /**
@@ -980,6 +983,10 @@ define(function (require, exports, module) {
                 return "Byte";
             case "Object":
                 return "AnyObject";
+            case "id":
+                return "AnyObject";
+            default:
+                break;
         }
         return type;
     };
