@@ -1,0 +1,18 @@
+{
+    "name": "staruml.swift",
+    "title": "Swift",
+    "description": "Swift code generation engineering.",
+    "homepage": "https://github.com/tomlee130/staruml-starumlSwift",
+    "issues": "https://github.com/tomlee130/staruml-starumlSwift/issues",
+    "keywords": ["Swift","staruml","staruml extention"],
+    "version": "0.1.0",
+    "author": {
+        "name": "Tom Lee",
+        "email": "tomlee130@qq.com",
+        "url": "https://github.com/tomlee130"
+    },
+    "license": "MIT",
+    "engines": {
+        "staruml": ">=2.8.0"
+    }
+}
