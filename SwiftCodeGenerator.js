@@ -232,10 +232,10 @@ define(function (require, exports, module) {
             if (elem.isFinalSpecialization === true || elem.isLeaf === true) {
                 finalModifier = " final ";
             }
-            var templatePart = cppCodeGen.getTemplateParameter(elem);
-            if (templatePart.length > 0) {
-                codeWriter.writeLine(templatePart);
-            }
+//            var templatePart = cppCodeGen.getTemplateParameter(elem);
+//            if (templatePart.length > 0) {
+//                codeWriter.writeLine(templatePart);
+//            }
             var brief = elem.name + ' class';
             if (elem.documentation.length > 0) {
                 brief = elem.documentation;
@@ -785,7 +785,11 @@ define(function (require, exports, module) {
                 
                 if (returnTypeParam.length > 0) {
                     var tmpReturnType = this.getType(returnTypeParam[0]);
-                    methodStr += " -> " + this.getType(returnTypeParam[0]) + "";
+                    if (tmpReturnType === "void"){
+                        methodStr += "";
+                    } else {
+                        methodStr += " -> " + this.getType(returnTypeParam[0]) + "";
+                    }
                 } else {
                     methodStr += "";
                 }
