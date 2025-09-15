@@ -1,5 +1,5 @@
 # staruml-starumlSwift
-Swift Code Generator Extension for StarUML 2
+Swift Code Generator Extension for StarUML2
 
 ============================
 
